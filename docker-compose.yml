@@ -1,0 +1,151 @@
+# version: "3.8"
+
+# services:
+#   mongodb_primary:
+#     image: bitnami/mongodb:latest
+#     container_name: mongodb_primary
+#     ports:
+#       - ${MONGODB_PRIMARY}:27017
+#     environment:
+#       - ALLOW_EMPTY_PASSWORD=no
+#       - MONGODB_ROOT_PASSWORD=${DB_PASS}
+#       - MONGODB_REPLICA_SET_MODE=primary
+#       - MONGODB_REPLICA_SET_NAME=oms-mongodb-replica-set
+#       - MONGODB_ADVERTISED_HOSTNAME=mongodb_primary
+#       - MONGODB_REPLICA_SET_KEY=OjKJSgaPb3
+#     volumes:
+#       - "./data/mongodb/primary:/bitnami/mongodb"
+#     networks:
+#       - oms_network
+#   mongodb_secondary:
+#     image: bitnami/mongodb:latest
+#     container_name: mongodb_secondary
+#     ports:
+#       - ${MONGODB_SECONDARY}:27017
+#     environment:
+#       - MONGODB_REPLICA_SET_MODE=secondary
+#       - MONGODB_REPLICA_SET_NAME=oms-mongodb-replica-set
+#       - MONGODB_ADVERTISED_HOSTNAME=mongodb_secondary
+#       - MONGODB_INITIAL_PRIMARY_HOST=mongodb_primary
+#       - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+#       - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=${DB_PASS}
+#       - MONGODB_REPLICA_SET_KEY=OjKJSgaPb3
+#     volumes:
+#       - "./data/mongodb/secondary:/bitnami/mongodb"
+#     depends_on:
+#       - mongodb_primary
+#     networks:
+#       - oms_network
+#   zookeper:
+#     image: bitnami/zookeeper:latest
+#     platform: linux/amd64
+#     container_name: oms_zookeper
+#     restart: on-failure
+#     ports:
+#       - 2181:2181
+#       - 38080:8080
+#     environment:
+#       - ZOO_PORT_NUMBER=2181
+#       - ALLOW_ANONYMOUS_LOGIN=yes
+#       - ZOO_MAX_SESSION_TIMEOUT=43200000
+#     networks:
+#       - oms_network
+#   kafka:
+#     image: bitnami/kafka:latest
+#     platform: linux/amd64
+#     container_name: oms_kafka
+#     ports:
+#       - 9092:9092
+#       - ${KAFKA_EXTERNAL_PORT}:${KAFKA_EXTERNAL_PORT}
+#     environment:
+#       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeper:2181
+#       - ALLOW_PLAINTEXT_LISTENER=yes
+#       - ALLOW_ANONYMOUS_LOGIN=yes
+#       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+#       - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:${KAFKA_EXTERNAL_PORT}
+#       - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:${KAFKA_EXTERNAL_PORT}
+#       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+#     # volumes:
+#     #   - ./data/kafka:/bitnami/kafka
+#     restart: on-failure
+#     depends_on:
+#       - zookeper
+#     networks:
+#       - oms_network
+#   redis:
+#     image: redis
+#     container_name: oms_redis
+#     # healthcheck:
+#     #   test: ["CMD", "redis-cli", "ping"]
+#     #   interval: 3s
+#     #   retries: 5
+#     #   start_period: 30s
+#     ports:
+#       - ${REDIS_PORT}:6379
+#     volumes:
+#       - "./configs/redis/redis.conf:/usr/local/etc/redis/redis.conf"
+#       - "./data/redis:/data"
+#       - "./logs/redis:/var/log/redis"
+#     networks:
+#       - oms_network
+#   # gateway:
+#   #   image: nginx:alpine
+#   #   container_name: gateway
+#   #   ports:
+#   #     - 80:80
+#   #   volumes:
+#   #     - "./configs/nginx.conf:/etc/nginx/nginx.conf"
+#   #     - "./logs/nginx:/var/log/nginx"
+#   #
+#     # networks:
+#     #   - oms_network
+#   rabbitmq3:
+#       container_name: oms_rabbitmq
+#       image: rabbitmq:3-management-alpine
+#       environment:
+#           - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+#           - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+#       ports:
+#           # AMQP protocol port
+#           - '${RABBITMQ_PORT}:5672'
+#           # HTTP management UI
+#           - '${RABBITMQ_UI}:15672'
+#       networks:
+#         - oms_network
+#   # postgres:
+#   #     container_name: oms_postgres
+#   #     image:  postgres:alpine
+#   #     environment:
+#   #         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#   #     ports:
+#   #         - '${POSTGERS_PORT}:5432'
+#   #     networks:
+#   #       - oms_network
+# networks:
+#   oms_network:
+#     name: oms_network
+#     driver: bridge
+
+# volumes:
+#   data:
+#     driver: local
+
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: raw_db
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
+

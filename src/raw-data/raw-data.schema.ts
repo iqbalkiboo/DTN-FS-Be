@@ -1,10 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document } from "mongoose";
 
-export type RawDataDocument = RawData & Document;
-
-@Schema()
-export class RawData {
+@Schema({ timestamps: true, collection: "raw_data" })
+export class RawData extends Document {
   @Prop({ required: true })
   resultTime: Date;
 
@@ -15,13 +13,13 @@ export class RawData {
   cellId: string;
 
   @Prop({ required: true })
-  availDur: Number;
+  availDur: number;
 }
 
 export const RawDataSchema = SchemaFactory.createForClass(RawData);
 
-// Compound unique index: enodebId + cellId + resultTime
+// Tambahkan unique compound index
 RawDataSchema.index(
-  { enodebId: 1, cellId: 1, resultTime: 1 },
-  { unique: true },
+  { resultTime: 1, enodebId: 1, cellId: 1 },
+  { unique: true }
 );

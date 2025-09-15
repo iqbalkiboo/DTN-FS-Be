@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { RawDataService } from './raw-data.service';
-import { RawDataController } from './raw-data.controller';
-import { RawData, RawDataSchema } from './raw-data.schema';
+import { Module } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
+import { RawDataService } from "./raw-data.service";
+import { RawDataController } from "./raw-data.controller";
+import { RawData, RawDataSchema } from "./raw-data.schema";
 
 @Module({
   imports: [
@@ -10,5 +10,6 @@ import { RawData, RawDataSchema } from './raw-data.schema';
   ],
   controllers: [RawDataController],
   providers: [RawDataService],
+  exports: [RawDataService],
 })
 export class RawDataModule {}

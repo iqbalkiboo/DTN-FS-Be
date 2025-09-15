@@ -11,7 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RawDataSchema = exports.RawData = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
-let RawData = class RawData {
+const mongoose_2 = require("mongoose");
+let RawData = class RawData extends mongoose_2.Document {
     resultTime;
     enodebId;
     cellId;
@@ -35,8 +36,8 @@ __decorate([
     __metadata("design:type", Number)
 ], RawData.prototype, "availDur", void 0);
 exports.RawData = RawData = __decorate([
-    (0, mongoose_1.Schema)()
+    (0, mongoose_1.Schema)({ timestamps: true, collection: "raw_data" })
 ], RawData);
 exports.RawDataSchema = mongoose_1.SchemaFactory.createForClass(RawData);
-exports.RawDataSchema.index({ enodebId: 1, cellId: 1, resultTime: 1 }, { unique: true });
+exports.RawDataSchema.index({ resultTime: 1, enodebId: 1, cellId: 1 }, { unique: true });
 //# sourceMappingURL=raw-data.schema.js.map

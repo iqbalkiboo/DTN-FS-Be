@@ -22,6 +22,7 @@ exports.RawDataModule = RawDataModule = __decorate([
         ],
         controllers: [raw_data_controller_1.RawDataController],
         providers: [raw_data_service_1.RawDataService],
+        exports: [raw_data_service_1.RawDataService],
     })
 ], RawDataModule);
 //# sourceMappingURL=raw-data.module.js.map
