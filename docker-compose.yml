@@ -130,8 +130,6 @@
 #   data:
 #     driver: local
 
-version: '3.8'
-
 services:
   mongodb:
     image: mongo:6
