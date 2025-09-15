@@ -46,23 +46,32 @@ export class RawDataController {
 
   @Get()
   async getAll() {
-    // Endpoint baru untuk melihat semua data yang sudah diupload
     return this.rawDataService.findAll();
   }
 
+  // @Get("graph")
+  // async getGraph(
+  //   @Query("enodebId") enodebId?: string,
+  //   @Query("cellId") cellId?: string,
+  //   @Query("startDate") startDate?: string,
+  //   @Query("endDate") endDate?: string,
+  // ) {
+  //   if (!enodebId || !cellId || !startDate || !endDate) {
+  //     throw new BadRequestException(
+  //       "enodebId, cellId, startDate, and endDate are required"
+  //     );
+  //   }
+
+  //   return this.rawDataService.getGraph(enodebId, cellId, startDate, endDate);
+  // }
+
   @Get("graph")
   async getGraph(
-    @Query("enodebId") enodebId: string,
-    @Query("cellId") cellId: string,
-    @Query("startDate") startDate: string,
-    @Query("endDate") endDate: string
+    @Query("enodebId") enodebId?: string,
+    @Query("cellId") cellId?: string,
+    @Query("startDate") startDate?: string,
+    @Query("endDate") endDate?: string
   ) {
-    if (!enodebId || !cellId || !startDate || !endDate) {
-      throw new BadRequestException(
-        "enodebId, cellId, startDate, and endDate are required"
-      );
-    }
-
     return this.rawDataService.getGraph(enodebId, cellId, startDate, endDate);
   }
 }

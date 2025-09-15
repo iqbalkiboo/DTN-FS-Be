@@ -9,7 +9,7 @@ export declare class RawDataService {
         __v: number;
     })[]>;
     insertMany(rows: any[]): Promise<import("mongoose").MongooseBulkWriteResult>;
-    getGraph(enodebId: string, cellId: string, startDate: string, endDate: string): Promise<{
+    getGraph(enodebId?: string, cellId?: string, startDate?: string, endDate?: string): Promise<{
         resultTime: Date;
         availability: number;
     }[]>;

@@ -8,7 +8,7 @@ export declare class RawDataController {
     }> & {
         __v: number;
     })[]>;
-    getGraph(enodebId: string, cellId: string, startDate: string, endDate: string): Promise<{
+    getGraph(enodebId?: string, cellId?: string, startDate?: string, endDate?: string): Promise<{
         resultTime: Date;
         availability: number;
     }[]>;

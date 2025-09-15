@@ -50,9 +50,6 @@ let RawDataController = class RawDataController {
         return this.rawDataService.findAll();
     }
     async getGraph(enodebId, cellId, startDate, endDate) {
-        if (!enodebId || !cellId || !startDate || !endDate) {
-            throw new common_1.BadRequestException("enodebId, cellId, startDate, and endDate are required");
-        }
         return this.rawDataService.getGraph(enodebId, cellId, startDate, endDate);
     }
 };

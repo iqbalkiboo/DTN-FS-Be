@@ -31,31 +31,36 @@ export class RawDataService {
   }
 
   async getGraph(
-    enodebId: string,
-    cellId: string,
-    startDate: string,
-    endDate: string
+    enodebId?: string,
+    cellId?: string,
+    startDate?: string,
+    endDate?: string
   ) {
-    const start = dayjs(
-      startDate,
-      ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ssZ"],
-      true
-    );
-    const end = dayjs(endDate, ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ssZ"], true);
+    const filter: any = {};
 
-    if (!start.isValid() || !end.isValid()) {
+    if (enodebId) filter.enodebId = enodebId;
+    if (cellId) filter.cellId = cellId;
+
+    let start: dayjs.Dayjs | null = startDate
+      ? dayjs(startDate, ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ssZ"], true)
+      : null;
+    let end: dayjs.Dayjs | null = endDate
+      ? dayjs(endDate, ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ssZ"], true)
+      : null;
+
+    if ((start && !start.isValid()) || (end && !end.isValid())) {
       throw new BadRequestException(
         "Invalid date format. Use YYYY-MM-DD or ISO string."
       );
     }
 
-    const result = await this.rawDataModel
-      .find({
-        enodebId,
-        cellId,
-        resultTime: { $gte: start.toDate(), $lte: end.toDate() },
-      })
-      .exec();
+    if (start || end) {
+      filter.resultTime = {};
+      if (start) filter.resultTime.$gte = start.toDate();
+      if (end) filter.resultTime.$lte = end.toDate();
+    }
+
+    const result = await this.rawDataModel.find(filter).exec();
 
     return result.map((r) => ({
       resultTime: r.resultTime,
